@@ -7,6 +7,8 @@ require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
+	github.com/gofiber/fiber/v2 v2.42.0
+	github.com/gofiber/template v1.7.5
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
