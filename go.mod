@@ -3,13 +3,19 @@ module github.com/shokHorizon/kursik
 go 1.19
 
 require (
+	github.com/gofiber/fiber/v2 v2.42.0
+	github.com/gofiber/template v1.7.5
+	gorm.io/gorm v1.24.5
+)
+
+require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
-	github.com/gofiber/fiber/v2 v2.42.0
-	github.com/gofiber/template v1.7.5
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
