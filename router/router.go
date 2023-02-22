@@ -11,11 +11,6 @@ import (
 )
 
 func SetupRoutes(app *fiber.App) {
-	// Group api calls with param '/api'
-	// api := app.Group("/api", logger.New())
-
-	// Setup note routes, can use same syntax to add routes for more models
-
 	apiRoutes.SetupRoutes(app)
 	taskRoutes.SetupRoutes(app)
 	solutionRoutes.SetupRoutes(app)
