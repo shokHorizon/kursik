@@ -2,17 +2,14 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
-	_ "github.com/gofiber/fiber/v2/middleware/logger"
 
-	apiRoutes "github.com/shokHorizon/kursik/internals/routes/api"
-	homeRoutes "github.com/shokHorizon/kursik/internals/routes/home"
-	solutionRoutes "github.com/shokHorizon/kursik/internals/routes/solution"
-	taskRoutes "github.com/shokHorizon/kursik/internals/routes/task"
+	"github.com/shokHorizon/kursik/internals/route"
 )
 
 func SetupRoutes(app *fiber.App) {
-	apiRoutes.SetupRoutes(app)
-	taskRoutes.SetupRoutes(app)
-	solutionRoutes.SetupRoutes(app)
-	homeRoutes.SetupRoutes(app)
+	route.SetupApiRoutes(app)
+	route.SetupUserRoutes(app)
+	route.SetupHomeRoutes(app)
+	route.SetupTaskRoutes(app)
+	route.SetupSolutionRoutes(app)
 }

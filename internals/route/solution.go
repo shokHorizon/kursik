@@ -1,11 +1,11 @@
-package solutionRoutes
+package route
 
 import (
 	"github.com/gofiber/fiber/v2"
 	solutionHandler "github.com/shokHorizon/kursik/internals/handlers/solution"
 )
 
-func SetupRoutes(router fiber.Router) {
+func SetupSolutionRoutes(router fiber.Router) {
 	task := router.Group("/solution")
 
 	task.Get("/", solutionHandler.GetSolutions)

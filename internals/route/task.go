@@ -1,11 +1,11 @@
-package taskRoutes
+package route
 
 import (
 	"github.com/gofiber/fiber/v2"
 	taskHandler "github.com/shokHorizon/kursik/internals/handlers/task"
 )
 
-func SetupRoutes(router fiber.Router) {
+func SetupTaskRoutes(router fiber.Router) {
 	task := router.Group("/task")
 
 	task.Get("/", taskHandler.GetTasks)

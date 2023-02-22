@@ -1,11 +1,11 @@
-package apiRoutes
+package route
 
 import (
 	"github.com/gofiber/fiber/v2"
 	apiHandler "github.com/shokHorizon/kursik/internals/handlers/api"
 )
 
-func SetupRoutes(router fiber.Router) {
+func SetupApiRoutes(router fiber.Router) {
 	api := router.Group("/api")
 
 	setupTaskRoutes(api)
