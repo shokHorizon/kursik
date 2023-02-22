@@ -7,13 +7,14 @@ import (
 )
 
 func main() {
-	engine := html.New("./views", ".html")
+	engine := html.New("./views", ".tmpl")
 
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
 
 	// Connect to the Database
+	//database.ConnectDB()
 
 	// Send a string back for GET calls to the endpoint "/"
 	router.SetupRoutes(app)
