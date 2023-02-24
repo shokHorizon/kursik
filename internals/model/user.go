@@ -4,7 +4,7 @@ import "fmt"
 
 type User struct {
 	ID             uint64     `gorm:"primaryKey"`
-	Login          string     `json:"login" form:"login"`
+	Login          string     `gorm:"unique" json:"login" form:"login"`
 	HashedPassword string     `json:"hashedPassword" form:"password"`
 	AccessLevel    uint16     `json:"accessLevel"`
 	Tasks          []Task     `gorm:"foreignKey:ID"`

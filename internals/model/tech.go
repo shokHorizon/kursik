@@ -1,5 +1,6 @@
 package model
 
 type Tech struct {
-	Title string `gorm:"primaryKey"`
+	ID    uint64 `gorm:"primaryKey"`
+	Title string `gorm:"unique" json:"title"`
 }

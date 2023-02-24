@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html"
 
+	"github.com/shokHorizon/kursik/database"
 	"github.com/shokHorizon/kursik/router"
 )
 
@@ -15,7 +16,7 @@ func main() {
 	})
 
 	// Connect to the Database
-	//database.ConnectDB()
+	database.ConnectDB()
 
 	// Send a string back for GET calls to the endpoint "/"
 	router.SetupRoutes(app)
