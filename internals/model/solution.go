@@ -2,8 +2,8 @@ package model
 
 type Solution struct {
 	ID     uint64 `gorm:"primaryKey"`
-	UserID uint64 `gorm:"foreignKey:ID"`
-	TaskID uint64 `gorm:"foreignKey:ID"`
-	Code   string `json:"description"`
-	IsDone bool
+	UserID uint64 `gorm:"default:NULL"`
+	TaskID uint64 `gorm:"default:NULL"`
+	Code   string `json:"code"`
+	Status bool   `gorm:"default:null"`
 }

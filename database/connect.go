@@ -36,6 +36,7 @@ func ConnectDB() {
 	fmt.Println("Connection Opened to Database")
 
 	// Migrate the database
+	DB.Migrator().DropTable(&model.User{}, &model.Tech{}, &model.Course{}, &model.Tag{}, &model.Task{}, &model.Solution{})
 	DB.AutoMigrate(&model.User{}, &model.Tech{}, &model.Course{}, &model.Tag{}, &model.Task{}, &model.Solution{})
 	fmt.Println("Database Migrated")
 }

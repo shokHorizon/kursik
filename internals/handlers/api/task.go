@@ -83,7 +83,6 @@ func UpdateTask(c *fiber.Ctx) error {
 	task.Name = updateTaskData.Name
 	task.Description = updateTaskData.Description
 	task.Tests = updateTaskData.Tests
-	task.AuthorSolution = updateTaskData.AuthorSolution
 	task.Tags = updateTaskData.Tags
 
 	db.Save(&task)
