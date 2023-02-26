@@ -1,6 +1,7 @@
 package model
 
 type Tag struct {
-	ID   uint64 `gorm:"primaryKey"`
-	Name string `gorm:"unique" json:"title"`
+	ID     uint64 `gorm:"primaryKey"`
+	Name   string `gorm:"unique" json:"title"`
+	TaskID uint64
 }
