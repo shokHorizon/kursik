@@ -3,12 +3,12 @@ package model
 import "fmt"
 
 type User struct {
-	ID             uint64     `gorm:"primaryKey"`
-	Login          string     `gorm:"unique" json:"login" form:"login"`
-	HashedPassword string     `json:"hashedPassword" form:"password"`
-	AccessLevel    uint16     `json:"accessLevel"`
-	Tasks          []Task     `gorm:"foreignKey:ID"`
-	Solutions      []Solution `gorm:"foreignKey:ID"`
+	ID             uint64 `gorm:"primaryKey"`
+	Login          string `gorm:"unique" json:"login" form:"login"`
+	HashedPassword string `json:"hashedPassword" form:"password"`
+	AccessLevel    uint16 `json:"accessLevel"`
+	Tasks          []Task
+	Solutions      []Solution
 }
 
 var users map[string]string
