@@ -68,41 +68,30 @@ func RemoveUser(c *fiber.Ctx) error {
 }
 
 func UpdateUser(c *fiber.Ctx) error {
-	type updateUser struct {
-		Login          string `gorm:"unique" json:"login" form:"login"`
-		HashedPassword string `json:"hashedPassword" form:"password"`
-		AccessLevel    uint16 `json:"accessLevel"`
-	}
-
 	db := database.DB
 	var user model.User
 
-	// Read the param id.
-	id := c.Params("id")
-
-	// Find the user with the given id.
-	db.Find(&user, "id = ?", id)
-
-	//If have no user.
-	if user.ID == 0 {
-		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No user present", "data": nil})
-	}
-
-	var updateUserData updateUser
+	var updateUserData model.User
 	err := c.BodyParser(&updateUserData)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "data": err})
 	}
 
-	//Edit user.
+	db.Find(&user, "id = ?", updateUserData.ID)
+
+	if user.ID == 0 {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No user present", "data": nil})
+	}
+
 	user.Login = updateUserData.Login
 	user.HashedPassword = updateUserData.HashedPassword
 	user.AccessLevel = updateUserData.AccessLevel
+	user.Tasks = updateUserData.Tasks
+	user.Solutions = updateUserData.Solutions
+	user.Courses = updateUserData.Courses
 
-	//Save changes.
 	db.Save(&user)
 
-	//Return updated message.
 	return c.JSON(fiber.Map{"status": "success", "message": "User updated", "data": user})
 
 }

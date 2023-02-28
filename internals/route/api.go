@@ -12,26 +12,27 @@ func SetupApiRoutes(router fiber.Router) {
 	setupSolutionRoutes(api)
 	setupUserRoutes(api)
 	setupCourseRoutes(api)
+	setupTagRoutes(api)
 }
 
 func setupTaskRoutes(router fiber.Router) {
 	task := router.Group("/task")
 
-	task.Get("/", apiHandler.GetTasks)
-	task.Get("/:id", apiHandler.GetTask)
-	task.Post("/", apiHandler.CreateTask)
-	task.Put("/:id", apiHandler.UpdateTask)
-	task.Delete("/:id", apiHandler.RemoveTask)
+	task.Get("/getAll", apiHandler.GetTasks)
+	task.Get("/get/:id", apiHandler.GetTask)
+	task.Post("/create", apiHandler.CreateTask)
+	task.Put("/update", apiHandler.UpdateTask)
+	task.Delete("/delete/:id", apiHandler.RemoveTask)
 }
 
 func setupSolutionRoutes(router fiber.Router) {
 	solution := router.Group("/solution")
 
-	solution.Get("/", apiHandler.GetSolutions)
-	solution.Get("/:id", apiHandler.GetSolution)
-	solution.Post("/", apiHandler.CreateSolution)
-	solution.Put("/:id", apiHandler.UpdateSolution)
-	solution.Delete("/:id", apiHandler.RemoveSolution)
+	solution.Get("/getAll", apiHandler.GetSolutions)
+	solution.Get("/get/:id", apiHandler.GetSolution)
+	solution.Post("/create", apiHandler.CreateSolution)
+	solution.Put("/update", apiHandler.UpdateSolution)
+	solution.Delete("/delete/:id", apiHandler.RemoveSolution)
 
 	solution.Post("/pased", apiHandler.PassSolution)
 	solution.Post("/failed", apiHandler.FailSolution)
@@ -41,21 +42,32 @@ func setupSolutionRoutes(router fiber.Router) {
 func setupUserRoutes(router fiber.Router) {
 	user := router.Group("/user")
 
-	user.Get("/", apiHandler.GetUsers)
-	user.Get("/:id", apiHandler.GetUser)
-	user.Post("/", apiHandler.CreateUser)
-	user.Put("/:id", apiHandler.UpdateUser)
-	user.Delete("/:id", apiHandler.RemoveUser)
+	user.Get("/getAll", apiHandler.GetUsers)
+	user.Get("/get/:id", apiHandler.GetUser)
+	user.Post("/create", apiHandler.CreateUser)
+	user.Put("/update", apiHandler.UpdateUser)
+	user.Delete("/delete/:id", apiHandler.RemoveUser)
 
 }
 
 func setupCourseRoutes(router fiber.Router) {
 	course := router.Group("/course")
 
-	course.Get("/", apiHandler.GetCourses)
-	course.Get("/:id", apiHandler.GetCourse)
-	course.Post("/", apiHandler.CreateCourse)
-	course.Put("/:id", apiHandler.UpdateUser)
-	course.Delete("/:id", apiHandler.RemoveCourse)
+	course.Get("/getAll", apiHandler.GetCourses)
+	course.Get("/get/:id", apiHandler.GetCourse)
+	course.Post("/create", apiHandler.CreateCourse)
+	course.Put("/update", apiHandler.UpdateCourse)
+	course.Delete("/delete/:id", apiHandler.RemoveCourse)
+
+}
+
+func setupTagRoutes(router fiber.Router) {
+	course := router.Group("/tag")
+
+	course.Get("/getAll", apiHandler.GetTags)
+	course.Get("/get/:id", apiHandler.GetTag)
+	course.Post("/create", apiHandler.CreateTag)
+	course.Put("/update", apiHandler.UpdateTag)
+	course.Delete("/delete/:id", apiHandler.RemoveTag)
 
 }

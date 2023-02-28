@@ -7,6 +7,7 @@ api
 - course
     - getAll
     - get/id
+    - create
     - delete/id
     - update
     - best
@@ -14,12 +15,14 @@ api
     - getAll
     - get/id
     - update
+    - create
     - delete/id
 - solution
     - send
     - get/id
     - getAll
     - update
+    - create
     - delete/id
     - changeStatus
 - auth

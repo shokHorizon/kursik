@@ -42,21 +42,21 @@ func GetCourse(c *fiber.Ctx) error {
 
 func RemoveCourse(c *fiber.Ctx) error {
 	db := database.DB
-	var user model.User
+	var course model.Course
 
 	// Read the param id.
 	id := c.Params("id")
 
 	// Find the note with the given id.
-	db.Find(&user, "id = ?", id)
+	db.Find(&course, "id = ?", id)
 
 	// If no such user present return an error.
-	if user.ID == 0 {
+	if course.ID == 0 {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No user present", "data": nil})
 	}
 
 	// Delete the user and return error if encountered.
-	err := db.Delete(&user, "id = ?", id).Error
+	err := db.Delete(&course, "id = ?", id).Error
 
 	if err != nil {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Failed to delete user", "data": nil})
@@ -68,42 +68,29 @@ func RemoveCourse(c *fiber.Ctx) error {
 }
 
 func UpdateCourse(c *fiber.Ctx) error {
-	type updateUser struct {
-		Login          string `gorm:"unique" json:"login" form:"login"`
-		HashedPassword string `json:"hashedPassword" form:"password"`
-		AccessLevel    uint16 `json:"accessLevel"`
-	}
 
 	db := database.DB
-	var user model.User
+	var course model.Course
 
-	// Read the param id.
-	id := c.Params("id")
-
-	// Find the user with the given id.
-	db.Find(&user, "id = ?", id)
-
-	//If have no user.
-	if user.ID == 0 {
-		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No user present", "data": nil})
-	}
-
-	var updateUserData updateUser
-	err := c.BodyParser(&updateUserData)
+	var updateCourseData model.Course
+	err := c.BodyParser(&updateCourseData)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "data": err})
 	}
 
-	//Edit user.
-	user.Login = updateUserData.Login
-	user.HashedPassword = updateUserData.HashedPassword
-	user.AccessLevel = updateUserData.AccessLevel
+	db.Find(&course, "id = ?", updateCourseData.ID)
 
-	//Save changes.
-	db.Save(&user)
+	if course.ID == 0 {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No course present", "data": nil})
+	}
 
-	//Return updated message.
-	return c.JSON(fiber.Map{"status": "success", "message": "User updated", "data": user})
+	course.Title = updateCourseData.Title
+	course.Tasks = updateCourseData.Tasks
+	course.OwnerID = updateCourseData.OwnerID
+
+	db.Save(&course)
+
+	return c.JSON(fiber.Map{"status": "success", "message": "Course updated", "data": course})
 
 }
 
