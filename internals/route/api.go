@@ -3,6 +3,7 @@ package route
 import (
 	"github.com/gofiber/fiber/v2"
 	apiHandler "github.com/shokHorizon/kursik/internals/handlers/api"
+	"github.com/shokHorizon/kursik/middleware"
 )
 
 func SetupApiRoutes(router fiber.Router) {
@@ -13,6 +14,7 @@ func SetupApiRoutes(router fiber.Router) {
 	setupUserRoutes(api)
 	setupCourseRoutes(api)
 	setupTagRoutes(api)
+	SetupAuthRoutes(api)
 }
 
 func setupTaskRoutes(router fiber.Router) {
@@ -42,7 +44,7 @@ func setupSolutionRoutes(router fiber.Router) {
 func setupUserRoutes(router fiber.Router) {
 	user := router.Group("/user")
 
-	user.Get("/getAll", apiHandler.GetUsers)
+	user.Get("/getAll", middleware.DeserializeUser, apiHandler.GetUsers)
 	user.Get("/get/:id", apiHandler.GetUser)
 	user.Post("/create", apiHandler.CreateUser)
 	user.Put("/update", apiHandler.UpdateUser)
@@ -70,4 +72,12 @@ func setupTagRoutes(router fiber.Router) {
 	course.Put("/update", apiHandler.UpdateTag)
 	course.Delete("/delete/:id", apiHandler.RemoveTag)
 
+}
+
+func SetupAuthRoutes(router fiber.Router) {
+	auth := router.Group("/auth")
+
+	auth.Post("/signup", apiHandler.SignUpUser)
+	auth.Post("/signin", apiHandler.SignInUser)
+	auth.Get("/logout", apiHandler.LogoutUser)
 }
