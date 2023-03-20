@@ -13,7 +13,7 @@ type User struct {
 	AccessLevel    uint16     `json:"accessLevel"`
 	Tasks          []Task     `json:"tasks"`
 	Solutions      []Solution `json:"solutions"`
-	Courses        []Course   `gorm:"many2many:courses_users" json:"courses"`
+	Courses        []*Course  `gorm:"many2many:courses_users"`
 	Email          string     `json:"email"`
 }
 

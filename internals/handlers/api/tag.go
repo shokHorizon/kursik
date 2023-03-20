@@ -73,7 +73,7 @@ func UpdateTag(c *fiber.Ctx) error {
 	}
 
 	tag.Name = updateTagData.Name
-	tag.Tasks = updateTagData.Tasks
+	// tag.Tasks = updateTagData.Tasks
 
 	db.Save(&tag)
 
@@ -96,4 +96,17 @@ func CreateTag(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"status": "success", "message": "Tag created", "data": tag})
+}
+
+func FindTagByName(c *fiber.Ctx) error {
+	db := database.DB
+	tagString := c.Query("name")
+	tag := new(model.Tag)
+
+	db.Find(&tag, "name = ?", tagString)
+	if tag == nil {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No tag present", "data": nil})
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "message": "Tag found", "data": tag})
 }

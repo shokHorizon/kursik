@@ -22,34 +22,42 @@ func setupTaskRoutes(router fiber.Router) {
 
 	task.Get("/getAll", apiHandler.GetTasks)
 	task.Get("/get/:id", apiHandler.GetTask)
+	// task.Use(middleware.IsUser)
+	// task.Get("/recommended", apiHandler.GetRecommended)
+	task.Get("/bytags", apiHandler.GetTasksByTags)
+	// task.Use(middleware.IsAdmin)
+
+	task.Put("/addtags/:id", apiHandler.AddTagsToTask)
 	task.Post("/create", apiHandler.CreateTask)
 	task.Put("/update", apiHandler.UpdateTask)
 	task.Delete("/delete/:id", apiHandler.RemoveTask)
+
+	task.Delete("/removetag/:id", apiHandler.RemoveTagFromTask)
+	task.Patch("/sequence/:id", apiHandler.ReplaceSequence)
 }
 
 func setupSolutionRoutes(router fiber.Router) {
 	solution := router.Group("/solution")
 
-	solution.Get("/getAll", apiHandler.GetSolutions)
+	solution.Use(middleware.IsUser)
 	solution.Get("/get/:id", apiHandler.GetSolution)
 	solution.Post("/create", apiHandler.CreateSolution)
+	solution.Use(middleware.IsAdmin)
 	solution.Put("/update", apiHandler.UpdateSolution)
 	solution.Delete("/delete/:id", apiHandler.RemoveSolution)
-
-	solution.Post("/pased", apiHandler.PassSolution)
-	solution.Post("/failed", apiHandler.FailSolution)
+	solution.Get("/getAll", apiHandler.GetSolutions)
 
 }
 
 func setupUserRoutes(router fiber.Router) {
 	user := router.Group("/user")
 
-	user.Get("/getAll", middleware.DeserializeUser, apiHandler.GetUsers)
-	user.Get("/get/:id", apiHandler.GetUser)
+	// user.Use(middleware.IsAdmin)
 	user.Post("/create", apiHandler.CreateUser)
 	user.Put("/update", apiHandler.UpdateUser)
 	user.Delete("/delete/:id", apiHandler.RemoveUser)
-
+	user.Get("/getAll", apiHandler.GetUsers)
+	user.Get("/get/:id", apiHandler.GetUser)
 }
 
 func setupCourseRoutes(router fiber.Router) {
@@ -57,20 +65,29 @@ func setupCourseRoutes(router fiber.Router) {
 
 	course.Get("/getAll", apiHandler.GetCourses)
 	course.Get("/get/:id", apiHandler.GetCourse)
+	course.Get("/get-tasks/:id", apiHandler.GetTasksByCource)
+	// course.Use(middleware.IsAdmin)
 	course.Post("/create", apiHandler.CreateCourse)
 	course.Put("/update", apiHandler.UpdateCourse)
 	course.Delete("/delete/:id", apiHandler.RemoveCourse)
 
+	course.Put("adduser/:id", apiHandler.AddUserToCourse)
+	course.Delete("/delete-users/:id", apiHandler.RemoveUserFromCource)
+	course.Put("/add-tasks/:id", apiHandler.AddTasksToCource)
+	course.Delete("delete-tasks/:id", apiHandler.RemoveTaskFromCourse)
+
 }
 
 func setupTagRoutes(router fiber.Router) {
-	course := router.Group("/tag")
+	tag := router.Group("/tag")
 
-	course.Get("/getAll", apiHandler.GetTags)
-	course.Get("/get/:id", apiHandler.GetTag)
-	course.Post("/create", apiHandler.CreateTag)
-	course.Put("/update", apiHandler.UpdateTag)
-	course.Delete("/delete/:id", apiHandler.RemoveTag)
+	tag.Get("/byname", apiHandler.FindTagByName)
+	tag.Get("/getAll", apiHandler.GetTags)
+	tag.Get("/get/:id", apiHandler.GetTag)
+	// tag.Use(middleware.IsAdmin)
+	tag.Post("/create", apiHandler.CreateTag)
+	tag.Put("/update", apiHandler.UpdateTag)
+	tag.Delete("/delete/:id", apiHandler.RemoveTag)
 
 }
 
@@ -80,4 +97,6 @@ func SetupAuthRoutes(router fiber.Router) {
 	auth.Post("/signup", apiHandler.SignUpUser)
 	auth.Post("/signin", apiHandler.SignInUser)
 	auth.Get("/logout", apiHandler.LogoutUser)
+	// запрос на подтверждение по почте /confirm
+	// запрос на смену пароля
 }

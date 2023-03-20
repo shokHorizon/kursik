@@ -10,7 +10,15 @@ import (
 	"github.com/shokHorizon/kursik/internals/model"
 )
 
-func DeserializeUser(c *fiber.Ctx) error {
+func IsAdmin(c *fiber.Ctx) error {
+	return DeserializeUser(c, 1)
+}
+
+func IsUser(c *fiber.Ctx) error {
+	return DeserializeUser(c, 0)
+}
+
+func DeserializeUser(c *fiber.Ctx, requireLevel int) error {
 	db := database.DB
 	var tokenString string
 	authorization := c.Get("Authorization")
@@ -50,7 +58,9 @@ func DeserializeUser(c *fiber.Ctx) error {
 	if float64(user.ID) != claims["id"] {
 		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{"status": "fail", "message": "the user belonging to this token no logger exists", "user": user.ID, "claims": claims["id"]})
 	}
-
+	if user.AccessLevel < uint16(requireLevel) {
+		return c.Status(fiber.StatusMethodNotAllowed).JSON(fiber.Map{"status": "fail", "message": "Access denied"})
+	}
 	//c.Locals("user", model.FilterUserRecord(&user))
 
 	return c.Next()
