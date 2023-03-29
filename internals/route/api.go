@@ -22,8 +22,9 @@ func setupTaskRoutes(router fiber.Router) {
 
 	task.Get("/getAll", apiHandler.GetTasks)
 	task.Get("/get/:id", apiHandler.GetTask)
-	// task.Use(middleware.IsUser)
+	task.Use(middleware.IsUser)
 	// task.Get("/recommended", apiHandler.GetRecommended)
+	//task.Post("/:id/solution", apiHandler.CreateSolution)
 	task.Get("/bytags", apiHandler.GetTasksByTags)
 	// task.Use(middleware.IsAdmin)
 
@@ -41,7 +42,7 @@ func setupSolutionRoutes(router fiber.Router) {
 
 	solution.Use(middleware.IsUser)
 	solution.Get("/get/:id", apiHandler.GetSolution)
-	solution.Post("/create", apiHandler.CreateSolution)
+	solution.Post("/:id/create", apiHandler.CreateSolution)
 	solution.Use(middleware.IsAdmin)
 	solution.Put("/update", apiHandler.UpdateSolution)
 	solution.Delete("/delete/:id", apiHandler.RemoveSolution)
@@ -66,7 +67,7 @@ func setupCourseRoutes(router fiber.Router) {
 	course.Get("/getAll", apiHandler.GetCourses)
 	course.Get("/get/:id", apiHandler.GetCourse)
 	course.Get("/get-tasks/:id", apiHandler.GetTasksByCource)
-	// course.Use(middleware.IsAdmin)
+	course.Use(middleware.IsAdmin)
 	course.Post("/create", apiHandler.CreateCourse)
 	course.Put("/update", apiHandler.UpdateCourse)
 	course.Delete("/delete/:id", apiHandler.RemoveCourse)

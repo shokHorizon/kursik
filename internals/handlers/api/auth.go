@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const jwt_secret = "chopka228"
+
 func SignUpUser(c *fiber.Ctx) error {
 	db := database.DB
 	var payload *model.SignUpInput
@@ -41,7 +43,7 @@ func SignUpUser(c *fiber.Ctx) error {
 		Login:          payload.Login,
 		Email:          strings.ToLower(payload.Email),
 		HashedPassword: string(hashedPassword),
-		AccessLevel:    1,
+		AccessLevel:    0,
 	}
 
 	result := db.Create(&newUser)
@@ -82,26 +84,23 @@ func SignInUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "Invalid email or Password"})
 	}
 
-	secret := "chopka228"
-
 	claims := jwt.MapClaims{
 		"id":          user.ID,
-		"accessLevel": 1,
-		"exp":         time.Now().Add(time.Hour * 72).Unix(),
+		"accessLevel": 0,
+		"exp":         time.Now().Add(time.Hour * 12).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	t, err := token.SignedString([]byte(secret))
+	t, err := token.SignedString([]byte(jwt_secret))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": fmt.Sprintf("generating JWT Token failed: %v", err)})
 	}
 
 	c.Cookie(&fiber.Cookie{
-		Name:  "token",
-		Value: t,
-		Path:  "/",
-		// MaxAge:   config.JwtMaxAge * 60,
+		Name:     "token",
+		Value:    t,
+		Path:     "/",
 		Secure:   false,
 		HTTPOnly: true,
 		Domain:   "localhost",

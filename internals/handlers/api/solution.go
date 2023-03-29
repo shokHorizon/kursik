@@ -1,6 +1,8 @@
 package apiHandler
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/shokHorizon/kursik/database"
 	"github.com/shokHorizon/kursik/internals/model"
@@ -26,12 +28,10 @@ func GetSolution(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db.Find(&solution, "id =?", id)
 
-	//If have no user.
 	if solution.ID == 0 {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No solution present", "data": nil})
 	}
 
-	//Return result.
 	return c.JSON(fiber.Map{"status": "success", "message": "Solution Found", "data": solution})
 }
 
@@ -86,11 +86,30 @@ func UpdateSolution(c *fiber.Ctx) error {
 func CreateSolution(c *fiber.Ctx) error {
 	db := database.DB
 	solution := new(model.Solution)
-
-	err := c.BodyParser(solution)
+	stringTaskID := c.Params("id")
+	taskID, e := strconv.ParseUint(stringTaskID, 10, 64)
+	if e != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Invalid task id"})
+	}
+	type CreateSolution struct {
+		Code   string `json:"code"`
+		Status bool   `gorm:"default:null" json:"status"`
+	}
+	createSolution := new(CreateSolution)
+	err := c.BodyParser(createSolution)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "data": err})
 	}
+
+	// userID, er := middleware.GetUserId(c)
+	// if er != nil {
+	// 	return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "data": er})
+	// }
+
+	solution.TaskID = taskID
+	solution.UserID = 1
+	solution.Code = createSolution.Code
+	solution.Status = createSolution.Status
 
 	err = db.Create(&solution).Error
 	if err != nil {
@@ -98,12 +117,4 @@ func CreateSolution(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{"status": "success", "message": "Solution created", "data": solution})
-}
-
-func PassSolution(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "debug", "message": "PassSolutionHandler", "data": nil})
-}
-
-func FailSolution(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{"status": "debug", "message": "FailSolutionHandler", "data": nil})
 }
