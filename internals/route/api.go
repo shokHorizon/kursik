@@ -95,6 +95,7 @@ func setupTagRoutes(router fiber.Router) {
 func SetupAuthRoutes(router fiber.Router) {
 	auth := router.Group("/auth")
 
+	auth.Get("/confirm/:ver_hash", apiHandler.SignUpVerification)
 	auth.Post("/signup", apiHandler.SignUpUser)
 	auth.Post("/signin", apiHandler.SignInUser)
 	auth.Get("/logout", apiHandler.LogoutUser)

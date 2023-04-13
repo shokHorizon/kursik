@@ -1,18 +1,25 @@
 package apiHandler
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
+	"github.com/segmentio/kafka-go"
 	"github.com/shokHorizon/kursik/database"
 	"github.com/shokHorizon/kursik/internals/model"
+	"github.com/shokHorizon/kursik/producer"
+	"github.com/thanhpk/randstr"
 	"golang.org/x/crypto/bcrypt"
 )
 
 const jwt_secret = "chopka228"
+
+var emailProducer *kafka.Writer = producer.EmailSending()
 
 func SignUpUser(c *fiber.Ctx) error {
 	db := database.DB
@@ -39,11 +46,17 @@ func SignUpUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": err.Error()})
 	}
 
+	code := randstr.String(20)
+	timeout := time.Now().Add(time.Minute * 15)
+
 	newUser := model.User{
 		Login:          payload.Login,
 		Email:          strings.ToLower(payload.Email),
 		HashedPassword: string(hashedPassword),
 		AccessLevel:    0,
+		VerHash:        code,
+		Timeout:        timeout,
+		IsActivate:     false,
 	}
 
 	result := db.Create(&newUser)
@@ -54,9 +67,39 @@ func SignUpUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": "Something bad happened"})
 	}
 
-	// return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "data": fiber.Map{"user": model.FilterUserRecord(&newUser)}})
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "User registered", "data": newUser})
+	type Content struct {
+		Email   string `json:"email"`
+		VerHash string `json:"ver_hash"`
+	}
 
+	content := Content{Email: newUser.Email, VerHash: newUser.VerHash}
+	bytes, r := json.Marshal(content)
+	if r != nil {
+		return c.Status(fiber.StatusBadGateway).JSON(fiber.Map{"status": "error", "message": "Something bad happened"})
+	}
+
+	emailProducer.WriteMessages(context.Background(), kafka.Message{
+		Value: []byte(bytes),
+	})
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "success", "message": "Confirm registration in email"})
+
+}
+
+func SignUpVerification(c *fiber.Ctx) error {
+	db := database.DB
+	var user model.User
+
+	hashedCode := c.Params("ver_hash")
+
+	db.Find(&user, "ver_hash = ?", hashedCode)
+	if user.ID == 0 {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No user present", "data": nil})
+	}
+
+	db.Model(&user).UpdateColumn("is_activate", true)
+
+	return c.JSON(fiber.Map{"status": "success", "message": "User registered!!!"})
 }
 
 func SignInUser(c *fiber.Ctx) error {
@@ -82,6 +125,10 @@ func SignInUser(c *fiber.Ctx) error {
 	err := bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte(payload.Password))
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "Invalid email or Password"})
+	}
+
+	if !user.IsActivate {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "fail", "message": "Confirm registration in email"})
 	}
 
 	claims := jwt.MapClaims{

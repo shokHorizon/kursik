@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	engine := html.New("./views", ".tmpl")
 
 	app := fiber.New(fiber.Config{
@@ -23,4 +24,5 @@ func main() {
 
 	// Listen on PORT 3000
 	app.Listen(":3000")
+
 }

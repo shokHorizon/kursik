@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -15,6 +16,9 @@ type User struct {
 	Solutions      []Solution `json:"solutions"`
 	Courses        []*Course  `gorm:"many2many:courses_users"`
 	Email          string     `json:"email"`
+	VerHash        string     `json:"ver_hash"`
+	Timeout        time.Time  `json:"timeout"`
+	IsActivate     bool       `json:"is_activate"`
 }
 
 type SignUpInput struct {
