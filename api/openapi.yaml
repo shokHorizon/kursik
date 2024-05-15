@@ -1,0 +1,204 @@
+openapi: "3.1.0"
+info:
+    title: "Kursik course api"
+    version: "1.0.0"
+paths:
+    /course/{id}/tasks:
+        parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                  type: integer
+                  format: int64
+                  description: "ID of course to update"
+        get:
+            summary: "Get tasks of course"
+    /course/{id}:
+            parameters:
+                - in: path
+                  name: id
+                  required: true
+                  schema:
+                      type: integer
+                      format: int64
+                      description: "ID of course to update"
+            /task:
+                get:
+                    summary: "Get tasks by course id"
+            get:
+                summary: "Get course by id"
+                responses:
+                    200:
+                        description: "Valid request"
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/Course"
+                    default:
+                        description: "Error"
+                        content:
+                            application/json:
+                                schema:
+                                    $ref: "#/components/schemas/Error"
+
+            delete:
+                summary: "Delete course by id"
+                responses:
+                    204:
+                        description: "Success"
+    /course:
+        put:
+            summary: "Update course by id"
+            responses:
+                200:
+                    description: "Valid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+                default:
+                    description: "Error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+
+    /courses:
+        get:
+            summary: "Get courses"
+            parameters:
+                -   in: query
+                    schema:
+                        $ref: "#/components/schemas/QueryParams"
+            responses:
+                200:
+                    description: "Valid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Courses"
+
+
+components:
+    schemas:
+        Course:
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                user_id:
+                    type: string
+                    format: uuid
+                name:
+                    type: string
+                    format: string
+                description:
+                    type: string
+                    format: string
+                rating:
+                    type: float
+                    format: float
+                is_approved:
+                    type: boolean
+
+            required:
+                - id
+                - name
+        Courses:
+            type: array
+            items:
+                $ref: "#/components/schemas/Course"
+        Task:
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                course_id:
+                    type: string
+                    format: uuid
+                user_id:
+                    type: string
+                    format: uuid
+                name:
+                    type: string
+                    format: string
+                description:
+                    type: string
+                    format: string
+                template:
+                    type: string
+                    format: string
+                test:
+                    type: string
+                    format: string
+                position:
+                    type: integer
+                    format: int32
+                created_at:
+                    type: string
+                    format: date-time
+                updated_at:
+                    type: string
+                    format: date-time
+                is_valid:
+                    type: boolean
+            required:
+                - id
+                - name
+        Tasks:
+            type: array
+            items:
+                $ref: "#/components/schemas/Task"
+        Solution:
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                task_id:
+                    type: string
+                    format: uuid
+                user_id:
+                    type: string
+                    format: uuid
+                status:
+                    type: string
+                    format: string
+                code:
+                    type: string
+                    format: string
+            required:
+                - id
+                - task_id
+                - user_id
+                - status
+                - code
+        Solutions:
+            type: array
+            items:
+                $ref: "#/components/schemas/Solution"
+        Pagination:
+            properties:
+                page:
+                    type: integer
+                    format: int64
+                offset:
+                    type: integer
+                    format: int64
+        QueryParams:
+            properties:
+                search:
+                    type: string
+                sort_by:
+                    type: string
+            $ref: "#/components/schemas/Pagination"
+        Error:
+            properties:
+                code:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+            required:
+                - code
+                - message

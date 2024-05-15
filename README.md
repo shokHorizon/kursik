@@ -4,13 +4,15 @@ LMS platform based on Golang
 ## Api endpoints
 
 api
-- course
-    - getAll
-    - get/id
-    - create
-    - delete/id
-    - update
-    - best
+- courses/
+  - 
+  - {id}/
+  - getAll
+  - get/id
+  - create
+  - delete/id
+  - update
+  - best
 - task
     - getAll
     - get/id
