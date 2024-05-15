@@ -15,40 +15,40 @@ paths:
         get:
             summary: "Get tasks of course"
     /course/{id}:
-            parameters:
-                - in: path
-                  name: id
-                  required: true
-                  schema:
-                      type: integer
-                      format: int64
-                      description: "ID of course to update"
-            /task:
-                get:
-                    summary: "Get tasks by course id"
+        parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                  type: integer
+                  format: int64
+                  description: "ID of course to update"
+        /task:
             get:
-                summary: "Get course by id"
-                responses:
-                    200:
-                        description: "Valid request"
-                        content:
-                            application/json:
-                                schema:
-                                    $ref: "#/components/schemas/Course"
-                    default:
-                        description: "Error"
-                        content:
-                            application/json:
-                                schema:
-                                    $ref: "#/components/schemas/Error"
+                summary: "Get tasks by course id"
+        get:
+            summary: "Get course by id"
+            responses:
+                200:
+                    description: "Valid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Course"
+                default:
+                    description: "Error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
 
-            delete:
-                summary: "Delete course by id"
-                responses:
-                    204:
-                        description: "Success"
+        delete:
+            summary: "Delete course by id"
+            responses:
+                204:
+                    description: "Success"
     /course:
-        put:
+        patch:
             summary: "Update course by id"
             responses:
                 200:
@@ -70,7 +70,7 @@ paths:
             parameters:
                 -   in: query
                     schema:
-                        $ref: "#/components/schemas/QueryParams"
+                        $ref: "#/components/schemas/QuerySearchParams"
             responses:
                 200:
                     description: "Valid request"
@@ -79,7 +79,156 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/Courses"
 
+    /task/{id}:
+        parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                  type: integer
+                  format: int64
+                  description: "ID of course to update"
+        get:
+            summary: "Get task by id"
+            parameters:
+                - in: path
+                  schema:
+                      $ref: "#/components/schemas/QuerySearchParams"
+            responses:
+                200:
+                    description: "Valid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Task"
+                default:
+                    description: "Error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+            summary: "Delete task by id"
+            responses:
+                204:
+                    description: "Success"
+                default:
+                    description: "Error"
+    /task:
+        patch:
+            summary: "Update task"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Task"
+            responses:
+                200:
+                    description: "Valid request"
+                default:
+                    description: "Error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+    /tasks:
+        get:
+            summary: "Get tasks"
+            parameters:
+                - in: query
+                  schema:
+                      $ref: "#/components/schemas/QuerySearchParams"
+                      properties:
+                          filter:
+                              type: array
+                              items:
+                                  type: string
+                                  format: uuid
+            responses:
+                200:
+                    description: "Valid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Tasks"
+                default:
+                    description: "Error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
 
+    /tag/{id}:
+        parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                  type: integer
+                  format: int64
+                  description: "ID of course to update"
+        get:
+            summary: "Get tag by id"
+            responses:
+                200:
+                    description: "Valid request"
+                default:
+
+                    description: "Error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+        delete:
+          summary: "Delete tag by id"
+          responses:
+            204:
+              description: "Success"
+            default:
+
+              description: "Error"
+              content:
+                application/json:
+                  schema:
+                    $ref: "#/components/schemas/Error"
+    /tag:
+      patch:
+        summary: "Update tag"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        responses:
+          200:
+            description: "Valid request"
+          default:
+
+            description: "Error"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+    /tags:
+      get:
+        summary: "Get tags"
+        parameters:
+          - in: query
+            schema:
+              $ref: "#/components/schemas/QuerySearchParams"
+        responses:
+          200:
+            description: "Valid request"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Tags"
+          default:
+            description: "Error"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
 components:
     schemas:
         Course:
@@ -177,6 +326,17 @@ components:
             type: array
             items:
                 $ref: "#/components/schemas/Solution"
+        Tag:
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                name:
+                    type: string
+        Tags:
+            type: array
+            items:
+                $ref: "#/components/schemas/Tag"
         Pagination:
             properties:
                 page:
@@ -185,7 +345,7 @@ components:
                 offset:
                     type: integer
                     format: int64
-        QueryParams:
+        QuerySearchParams:
             properties:
                 search:
                     type: string
