@@ -1,0 +1,89 @@
+openapi: "3.1.0"
+info:
+    title: "Kursik course api"
+    version: "1.0.0"
+paths:
+    /tag/{id}:
+        parameters:
+            - in: path
+              name: id
+              required: true
+              schema:
+                  type: integer
+                  format: int64
+                  description: "ID of course to update"
+        get:
+            summary: "Get tag by id"
+            responses:
+                200:
+                    description: "Valid request"
+                default:
+
+                    description: "Error"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "./utils.yaml#/components/schemas/Error"
+        delete:
+          summary: "Delete tag by id"
+          responses:
+            204:
+              description: "Success"
+            default:
+
+              description: "Error"
+              content:
+                application/json:
+                  schema:
+                    $ref: "./utils.yaml#/components/schemas/Error"
+    /tag:
+      patch:
+        summary: "Update tag"
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        responses:
+          200:
+            description: "Valid request"
+          default:
+
+            description: "Error"
+            content:
+              application/json:
+                schema:
+                  $ref: "./utils.yaml#/components/schemas/Error"
+    /tags:
+      get:
+        summary: "Get tags"
+        parameters:
+          - in: query
+            schema:
+              $ref: "./utils.yaml#/components/schemas/QuerySearchParams"
+        responses:
+          200:
+            description: "Valid request"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Tags"
+          default:
+            description: "Error"
+            content:
+              application/json:
+                schema:
+                  $ref: "./utils.yaml#/components/schemas/Error"
+components:
+    schemas:
+        Tag:
+            properties:
+                id:
+                    type: string
+                    format: uuid
+                name:
+                    type: string
+        Tags:
+            type: array
+            items:
+                $ref: "#/components/schemas/Tag"

@@ -1,0 +1,42 @@
+openapi: "3.1.0"
+info:
+  title: "Utils types"
+  version: "1.0.0"
+components:
+  parameters:
+    SearchParams:
+      in: query
+      schema:
+        type: object
+        properties:
+          search:
+            type: string
+          sort_by:
+            type: string
+          limit:
+            type: integer
+            format: int64
+          offset:
+            type: integer
+            format: int64
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: integer
+          format: int64
+        offset:
+          type: integer
+          format: int64
+
+    Error:
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      required:
+        - code
+        - message

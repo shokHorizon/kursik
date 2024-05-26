@@ -1,16 +1,17 @@
 package config
 
-import (
-	"fmt"
-	"os"
+import "github.com/ilyakaznacheev/cleanenv"
 
-	"github.com/joho/godotenv"
-)
+type Config struct {
+	Repository Repository `yaml:"repository"`
+}
 
-func Config(key string) string {
-	err := godotenv.Load(".env")
+// NewConfig init config
+func NewConfig() (*Config, error) {
+	var cfg Config
+	err := cleanenv.ReadConfig("config/config.yml", &cfg)
 	if err != nil {
-		fmt.Print("Error loading .env file")
+		return nil, err
 	}
-	return os.Getenv(key)
+	return &cfg, nil
 }

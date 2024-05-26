@@ -1,0 +1,29 @@
+components:
+  schemas:
+    Solution:
+      properties:
+        id:
+          type: string
+          format: uuid
+        task_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          format: string
+        code:
+          type: string
+          format: string
+      required:
+        - id
+        - task_id
+        - user_id
+        - status
+        - code
+    Solutions:
+      type: array
+      items:
+        $ref: "#/components/schemas/Solution"

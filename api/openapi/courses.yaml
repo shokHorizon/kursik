@@ -1,0 +1,104 @@
+openapi: "3.1.0"
+info:
+  title: "Kursik courses api"
+  version: "1.0.0"
+paths:
+  /course/{id}/tasks:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+          description: "ID of course to update"
+    get:
+      summary: "Get tasks of course"
+  /course/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+          description: "ID of course to update"
+    /task:
+      get:
+        summary: "Get tasks by course id"
+    get:
+      summary: "Get course by id"
+      responses:
+        200:
+          description: "Valid request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "./utils.yaml#/components/schemas/Error"
+
+    delete:
+      summary: "Delete course by id"
+      responses:
+        204:
+          description: "Success"
+  /course:
+    patch:
+      summary: "Update course by id"
+      responses:
+        200:
+          description: "Valid request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "./utils.yaml#/components/schemas/Error"
+
+  /courses:
+    get:
+      summary: "Get courses"
+      parameters:
+        - $ref: "./utils.yaml#/components/parameters/SearchParams"
+      responses:
+        200:
+          description: "Valid request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Courses"
+components:
+  schemas:
+    Course:
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          format: string
+        description:
+          type: string
+          format: string
+        is_approved:
+          type: boolean
+
+      required:
+        - id
+        - name
+    Courses:
+      type: array
+      items:
+        $ref: "#/components/schemas/Course"

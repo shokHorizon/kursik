@@ -1,0 +1,126 @@
+openapi: "3.1.0"
+info:
+  title: "Kursik tasks api"
+  version: "1.0.0"
+paths:
+  /task/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+          format: int64
+          description: "ID of course to update"
+    get:
+      summary: "Get task by id"
+      parameters:
+        - in: query
+          schema:
+            $ref: "./utils.yaml#/components/schemas/QuerySearchParams"
+      responses:
+        200:
+          description: "Valid request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "./utils.yaml#/components/schemas/Error"
+    delete:
+      summary: "Delete task by id"
+      responses:
+        204:
+          description: "Success"
+        default:
+          description: "Error"
+  /task:
+    patch:
+      summary: "Update task"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+      responses:
+        200:
+          description: "Valid request"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "./utils.yaml#/components/schemas/Error"
+  /tasks:
+    get:
+      summary: "Get tasks"
+      parameters:
+        - in: query
+          schema:
+            $ref: "./utils.yaml#/components/schemas/QuerySearchParams"
+            properties:
+              filter:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+      responses:
+        200:
+          description: "Valid request"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tasks"
+        default:
+          description: "Error"
+          content:
+            application/json:
+              schema:
+                $ref: "./utils.yaml#/components/schemas/Error"
+components:
+  schemas:
+    Task:
+      properties:
+        id:
+          type: string
+          format: uuid
+        course_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          format: string
+        description:
+          type: string
+          format: string
+        template:
+          type: string
+          format: string
+        test:
+          type: string
+          format: string
+        position:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        is_valid:
+          type: boolean
+      required:
+        - id
+        - name
+    Tasks:
+      type: array
+      items:
+        $ref: "#/components/schemas/Task"
